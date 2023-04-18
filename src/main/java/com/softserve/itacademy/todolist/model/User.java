@@ -1,48 +1,26 @@
 package com.softserve.itacademy.todolist.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.List;
 
-@Getter @Setter @NoArgsConstructor
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
-    @Pattern(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Must be a valid e-mail address")
+    private long id;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    @Pattern(regexp = "^.{6,}$",
-            message = "Must be minimum 6 symbols long")
-    @Pattern(regexp = ".*\\d.*",
-            message = "Must contain at least one digit")
-    @Pattern(regexp = ".*[A-Z].*",
-            message = "Must contain at least one uppercase letter")
-    @Pattern(regexp = ".*[a-z].*",
-            message = "Must contain at least one lowercase letter")
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -50,18 +28,6 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
-    private List<ToDo> myTodos;
-
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "todo_collaborator",
-            joinColumns = @JoinColumn(name = "collaborator_id"),
-            inverseJoinColumns = @JoinColumn(name = "todo_id"))
-    private List<ToDo> otherTodos;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -98,7 +64,7 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return getId() != null && getId().equals(user.getId());
+        return getId() != 0 && getId() == user.getId();
     }
 
     @Override
@@ -109,12 +75,9 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User { " +
-               "id = " + id +
-               ", firstName = '" + firstName + '\'' +
-               ", lastName = '" + lastName + '\'' +
-               ", email = '" + email + '\'' +
-               ", password = '" + password + '\'' +
-               ", role = " + role +
-               " }";
+                "id = " + id +
+                ", email = '" + email + '\'' +
+                ", password = '" + password + '\'' +
+                " }";
     }
 }

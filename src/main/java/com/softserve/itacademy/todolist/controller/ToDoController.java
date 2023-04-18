@@ -80,9 +80,9 @@ public class ToDoController {
             todo.setOwner(userService.readById(ownerId));
             return "update-todo";
         }
-        ToDo oldTodo = todoService.readById(todoId);
-        todo.setOwner(oldTodo.getOwner());
-        todo.setCollaborators(oldTodo.getCollaborators());
+        ToDo oldo = todoService.readById(todoId);
+        todo.setOwner(oldo.getOwner());
+        todo.setCollaborators(oldo.getCollaborators());
         todoService.update(todo);
         return "redirect:/todos/all/users/" + ownerId;
     }

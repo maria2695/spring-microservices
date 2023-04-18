@@ -1,7 +1,7 @@
 package com.softserve.itacademy.todolist.api;
 
-import com.softserve.itacademy.todolist.model.User;
 import com.softserve.itacademy.todolist.dto.UserResponse;
+import com.softserve.itacademy.todolist.model.User;
 import com.softserve.itacademy.todolist.service.RoleService;
 import com.softserve.itacademy.todolist.service.UserService;
 import org.springframework.http.HttpStatus;

@@ -24,7 +24,7 @@ public class ToDoAPI {
         this.userService = userService;
     }
 
-    @GetMapping()
+    /*@GetMapping()
     @ResponseStatus(HttpStatus.OK)
     List<ToDo> getAll(@PathVariable("user_id") long user_id,
                       Authentication authentication) {
@@ -37,7 +37,7 @@ public class ToDoAPI {
             }
         });
         return userService.readById(user_id).getMyTodos();
-    }
+    }*/
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,11 +67,11 @@ public class ToDoAPI {
         authorize(user_id, authentication);
         if (toDoService.readById(id) == null || userService.readById(user_id) == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         if (toDoService.readById(id).getCollaborators().contains(userService.readById(user_id)) || userService.readById(user_id).getRole().getName().equals("ADMIN") || toDoService.readById(id).getOwner().getId() == user_id) {
-            ToDo oldTodo = toDoService.readById(id);
+            ToDo oldo = toDoService.readById(id);
             toDo.setId(id);
-            toDo.setOwner(oldTodo.getOwner());
-            toDo.setCollaborators(oldTodo.getCollaborators());
-            toDo.setCreatedAt(oldTodo.getCreatedAt());
+            toDo.setOwner(oldo.getOwner());
+            toDo.setCollaborators(oldo.getCollaborators());
+            toDo.setCreatedAt(oldo.getCreatedAt());
             toDoService.update(toDo);
         }else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
