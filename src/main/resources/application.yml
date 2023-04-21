@@ -8,4 +8,6 @@ spring:
     port: 15672
     username: guest
     exchange: user.exchange
+    queue: user.queue
+    authqueue: auth.queue
     routingkey: user.routingkey

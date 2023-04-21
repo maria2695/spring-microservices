@@ -38,8 +38,9 @@ public class SecurityConfig {
                 .disable()
                 .authorizeRequests()
                 .requestMatchers("/users/create").permitAll()
-                .requestMatchers("/api/**").hasRole("ADMIN")
-                .anyRequest().fullyAuthenticated()
+                //.requestMatchers("/api/**").hasRole("ADMIN")
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .formLogin()

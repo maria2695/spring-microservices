@@ -1,5 +1,6 @@
 package com.softserve.itacademy.todolist.dto;
 
+import com.softserve.itacademy.todolist.model.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,8 @@ public class UserDTO implements Serializable {
     @Pattern(regexp = ".*[a-z].*",
             message = "Must contain at least one lowercase letter")
     private String password;
+
+    private Role role;
 
     @Override
     public boolean equals(Object o) {

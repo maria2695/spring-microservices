@@ -1,5 +1,6 @@
 package com.softserve.itacademy.todolist.messaging;
 
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,6 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    @Value("${spring.rabbitmq.queue}")
+    private String queue;
+
+    @Value("${spring.rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${spring.rabbitmq.routingkey}")
+    private String routingKey;
+
     @Value("${spring.rabbitmq.host}")
     String host;
 
@@ -20,6 +30,25 @@ public class RabbitMQConfig {
 
     @Value("${spring.rabbitmq.password}")
     String password;
+
+    @Bean
+    Queue queue() {
+        return new Queue(queue, true);
+    }
+
+    @Bean
+    Exchange myExchange() {
+        return ExchangeBuilder.directExchange(exchange).durable(true).build();
+    }
+
+    @Bean
+    Binding binding() {
+        return BindingBuilder
+                .bind(queue())
+                .to(myExchange())
+                .with(routingKey)
+                .noargs();
+    }
 
     @Bean
     CachingConnectionFactory connectionFactory() {

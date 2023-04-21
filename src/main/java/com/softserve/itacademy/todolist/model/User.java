@@ -18,7 +18,7 @@ import java.util.List;
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false)
@@ -64,7 +64,7 @@ public class User implements UserDetails{
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return getId() != 0 && getId() == user.getId();
+        return getId() != null && getId().equals(user.getId());
     }
 
     @Override
@@ -78,6 +78,7 @@ public class User implements UserDetails{
                 "id = " + id +
                 ", email = '" + email + '\'' +
                 ", password = '" + password + '\'' +
+                ", role = '" + role + '\'' +
                 " }";
     }
 }

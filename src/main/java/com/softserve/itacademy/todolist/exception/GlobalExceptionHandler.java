@@ -38,9 +38,11 @@ public class GlobalExceptionHandler {
         logger.error("Exception raised = {} :: URL = {}", exception.getMessage(), request.getRequestURL());
         ModelAndView modelAndView;
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
-            modelAndView = new ModelAndView("500");
+            modelAndView = new ModelAndView("error");
+            modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (httpStatus == HttpStatus.NOT_FOUND) {
-            modelAndView = new ModelAndView("404");
+            modelAndView = new ModelAndView("error");
+            modelAndView.setStatus(HttpStatus.NOT_FOUND);
         } else {
             modelAndView = new ModelAndView("error");
         }

@@ -1,5 +1,7 @@
 package com.softserve.itacademy.todolist.controller;
 
+import com.softserve.itacademy.todolist.dto.UserDTO;
+import com.softserve.itacademy.todolist.messaging.ProducerService;
 import com.softserve.itacademy.todolist.model.User;
 import com.softserve.itacademy.todolist.service.RoleService;
 import com.softserve.itacademy.todolist.service.UserService;
@@ -17,28 +19,40 @@ public class UserController {
     private final UserService userService;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final ProducerService producerService;
 
-    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder, ProducerService producerService) {
         this.userService = userService;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.producerService = producerService;
     }
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDTO());
         return "create-user";
     }
 
     @PostMapping("/create")
-    public String create(@Validated @ModelAttribute("user") User user, BindingResult result) {
+    public String create(@Validated @ModelAttribute("user") UserDTO user, BindingResult result) {
         if (result.hasErrors()) {
             return "create-user";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleService.readById(2));
-        User newUser = userService.create(user);
-        return "redirect:/todos/all/users/" + newUser.getId();
+
+        User userForResourceApplication = new User();
+        userForResourceApplication.setEmail(user.getEmail());
+        userForResourceApplication.setPassword(user.getPassword());
+        userForResourceApplication.setRole(roleService.readById(2));
+
+        userService.create(userForResourceApplication);
+        user.setId(userForResourceApplication.getId());
+
+        producerService.sendMessage(user);
+
+        return "redirect:/todos/all/users/" + user.getId();
     }
 
     @GetMapping("/{id}/read")
