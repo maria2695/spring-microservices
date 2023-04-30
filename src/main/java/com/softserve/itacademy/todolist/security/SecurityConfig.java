@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/users/create").permitAll()
                 //.requestMatchers("/api/**").hasRole("ADMIN")
                 .requestMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().fullyAuthenticated()
 
                 .and()
                 .formLogin()

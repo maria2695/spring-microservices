@@ -15,12 +15,20 @@ public class RabbitMQConfig {
 
     @Value("${spring.rabbitmq.queue}")
     private String queue;
+    @Value("${spring.rabbitmq.authqueue}")
+    private String authqueue;
+    @Value("${spring.rabbitmq.tokenqueue}")
+    private String tokenqueue;
 
     @Value("${spring.rabbitmq.exchange}")
     private String exchange;
 
     @Value("${spring.rabbitmq.routingkey}")
     private String routingKey;
+    @Value("${spring.rabbitmq.authroutingkey}")
+    private String authRoutingKey;
+    @Value("${spring.rabbitmq.tokenroutingkey}")
+    private String tokenRoutingKey;
 
     @Value("${spring.rabbitmq.host}")
     String host;
@@ -35,6 +43,14 @@ public class RabbitMQConfig {
     Queue queue() {
         return new Queue(queue, true);
     }
+    @Bean
+    Queue authqueue() {
+        return new Queue(authqueue, true);
+    }
+    @Bean
+    Queue tokenqueue() {
+        return new Queue(tokenqueue, true);
+    }
 
     @Bean
     Exchange myExchange() {
@@ -47,6 +63,22 @@ public class RabbitMQConfig {
                 .bind(queue())
                 .to(myExchange())
                 .with(routingKey)
+                .noargs();
+    }
+    @Bean
+    Binding authbinding() {
+        return BindingBuilder
+                .bind(authqueue())
+                .to(myExchange())
+                .with(authRoutingKey)
+                .noargs();
+    }
+    @Bean
+    Binding tokenbinding() {
+        return BindingBuilder
+                .bind(tokenqueue())
+                .to(myExchange())
+                .with(tokenRoutingKey)
                 .noargs();
     }
 

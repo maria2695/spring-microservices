@@ -1,5 +1,6 @@
 package com.softserve.itacademy.todolist.messaging;
 
+import com.softserve.itacademy.todolist.dto.AuthDTO;
 import com.softserve.itacademy.todolist.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/")
 public class ProducerController {
 
-    private ProducerService producerService;
+    private final ProducerService producerService;
     private static final Logger logger = LoggerFactory.getLogger(ProducerController.class);
 
     @Autowired
@@ -30,6 +31,13 @@ public class ProducerController {
     public ResponseEntity<String> sendMessage(@RequestBody UserDTO user) {
         producerService.sendMessage(user);
         logger.info("user sent: " + user);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<String> authenticate(@RequestBody AuthDTO user) {
+        producerService.sendMessage(user);
+        logger.info("User Details sent: " + user);
         return ResponseEntity.ok(response);
     }
 }

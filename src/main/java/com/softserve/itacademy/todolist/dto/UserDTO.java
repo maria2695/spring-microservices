@@ -7,10 +7,8 @@ import lombok.Setter;
 
 import jakarta.validation.constraints.Pattern;
 
-import java.io.Serializable;
-
 @Getter @Setter @NoArgsConstructor
-public class UserDTO implements Serializable {
+public class UserDTO {
     private Long id;
 
     @Pattern(regexp = "[A-Z][a-z]+",
